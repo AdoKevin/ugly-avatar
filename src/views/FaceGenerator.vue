@@ -9,10 +9,10 @@
     >
       <defs>
         <clipPath id="leftEyeClipPath">
-          <polyline :points="eyeLeftCountour" />
+          <polyline :points="eyeLeftContour" />
         </clipPath>
         <clipPath id="rightEyeClipPath">
-          <polyline :points="eyeRightCountour" />
+          <polyline :points="eyeRightContour" />
         </clipPath>
 
         <filter id="fuzzy">
@@ -20,7 +20,7 @@
             id="turbulence"
             baseFrequency="0.05"
             numOctaves="3"
-            type="noise"
+            type="fractalNoise"
             result="noise"
           />
           <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
@@ -52,8 +52,6 @@
           />
         </linearGradient>
       </defs>
-      <title>That's an ugly face</title>
-      <desc>CREATED BY XUAN TANG, MORE INFO AT TXSTC55.GITHUB.IO</desc>
       <rect
         x="-100"
         y="-100"
@@ -72,7 +70,6 @@
         stroke-linejoin="round"
         filter="url(#fuzzy)"
       />
-
       <g
         :transform="
           'translate(' +
@@ -83,8 +80,8 @@
         "
       >
         <polyline
-          id="rightCountour"
-          :points="eyeRightCountour"
+          id="rightContour"
+          :points="eyeRightContour"
           fill="white"
           stroke="white"
           :stroke-width="0.0 / faceScale"
@@ -103,7 +100,7 @@
       >
         <polyline
           id="leftCountour"
-          :points="eyeLeftCountour"
+          :points="eyeLeftContour"
           fill="white"
           stroke="white"
           :stroke-width="0.0 / faceScale"
@@ -291,10 +288,10 @@ export default {
       computedFacePoints: [], // the polygon points for face countour
       eyeRightUpper: [], // the points for right eye upper lid
       eyeRightLower: [],
-      eyeRightCountour: [], // for the white part of the eye
+      eyeRightContour: [], // for the white part of the eye
       eyeLeftUpper: [],
       eyeLeftLower: [],
-      eyeLeftCountour: [],
+      eyeLeftContour: [],
       faceHeight: 0, // the height of the face
       faceWidth: 0, // the width of the face
       center: [0, 0], // the center of the face
@@ -483,54 +480,54 @@ export default {
       let right = eyes.right;
       this.eyeRightUpper = right.upper;
       this.eyeRightLower = right.lower;
-      this.eyeRightCountour = right.upper
+      this.eyeRightContour = right.upper
         .slice(10, 90)
         .concat(right.lower.slice(10, 90).reverse());
       this.eyeLeftUpper = left.upper;
       this.eyeLeftLower = left.lower;
-      this.eyeLeftCountour = left.upper
+      this.eyeLeftContour = left.upper
         .slice(10, 90)
         .concat(left.lower.slice(10, 90).reverse());
       this.distanceBetweenEyes = randomFromInterval(
         this.faceWidth / 4.5,
-        this.faceWidth / 4,
+        this.faceWidth / 4
       );
       this.eyeHeightOffset = randomFromInterval(
         this.faceHeight / 8,
-        this.faceHeight / 6,
+        this.faceHeight / 6
       );
       this.leftEyeOffsetX = randomFromInterval(
         -this.faceWidth / 20,
-        this.faceWidth / 10,
+        this.faceWidth / 10
       );
       this.leftEyeOffsetY = randomFromInterval(
         -this.faceHeight / 50,
-        this.faceHeight / 50,
+        this.faceHeight / 50
       );
       this.rightEyeOffsetX = randomFromInterval(
         -this.faceWidth / 20,
-        this.faceWidth / 10,
+        this.faceWidth / 10
       );
       this.rightEyeOffsetY = randomFromInterval(
         -this.faceHeight / 50,
-        this.faceHeight / 50,
+        this.faceHeight / 50
       );
       this.leftEyeCenter = left.center[0];
       this.rightEyeCenter = right.center[0];
       this.leftPupilShiftX = randomFromInterval(
         -this.faceWidth / 20,
-        this.faceWidth / 20,
+        this.faceWidth / 20
       );
 
       // now we generate the pupil shifts
       // we first pick a point from the upper eye lid
       let leftInd0 = Math.floor(randomFromInterval(10, left.upper.length - 10));
       let rightInd0 = Math.floor(
-        randomFromInterval(10, right.upper.length - 10),
+        randomFromInterval(10, right.upper.length - 10)
       );
       let leftInd1 = Math.floor(randomFromInterval(10, left.upper.length - 10));
       let rightInd1 = Math.floor(
-        randomFromInterval(10, right.upper.length - 10),
+        randomFromInterval(10, right.upper.length - 10)
       );
       let leftLerp = randomFromInterval(0.2, 0.8);
       let rightLerp = randomFromInterval(0.2, 0.8);
@@ -557,41 +554,41 @@ export default {
       if (Math.random() > 0.3) {
         this.hairs = hairLines.generateHairLines0(
           this.computedFacePoints,
-          numHairLines[0] * 1 + 10,
+          numHairLines[0] * 1 + 10
         );
       }
       if (Math.random() > 0.3) {
         this.hairs = this.hairs.concat(
           hairLines.generateHairLines1(
             this.computedFacePoints,
-            numHairLines[1] / 1.5 + 10,
-          ),
+            numHairLines[1] / 1.5 + 10
+          )
         );
       }
       if (Math.random() > 0.5) {
         this.hairs = this.hairs.concat(
           hairLines.generateHairLines2(
             this.computedFacePoints,
-            numHairLines[2] * 3 + 10,
-          ),
+            numHairLines[2] * 3 + 10
+          )
         );
       }
       if (Math.random() > 0.5) {
         this.hairs = this.hairs.concat(
           hairLines.generateHairLines3(
             this.computedFacePoints,
-            numHairLines[3] * 3 + 10,
-          ),
+            numHairLines[3] * 3 + 10
+          )
         );
       }
       this.rightNoseCenterX = randomFromInterval(
         this.faceWidth / 18,
-        this.faceWidth / 12,
+        this.faceWidth / 12
       );
       this.rightNoseCenterY = randomFromInterval(0, this.faceHeight / 5);
       this.leftNoseCenterX = randomFromInterval(
         -this.faceWidth / 18,
-        -this.faceWidth / 12,
+        -this.faceWidth / 12
       );
       this.leftNoseCenterY =
         this.rightNoseCenterY +
@@ -609,19 +606,19 @@ export default {
         this.mouthPoints = mouthShape.generateMouthShape0(
           this.computedFacePoints,
           this.faceHeight,
-          this.faceWidth,
+          this.faceWidth
         );
       } else if (choice == 1) {
         this.mouthPoints = mouthShape.generateMouthShape1(
           this.computedFacePoints,
           this.faceHeight,
-          this.faceWidth,
+          this.faceWidth
         );
       } else {
         this.mouthPoints = mouthShape.generateMouthShape2(
           this.computedFacePoints,
           this.faceHeight,
-          this.faceWidth,
+          this.faceWidth
         );
       }
     },
